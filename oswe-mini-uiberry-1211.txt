@@ -1,4 +1,4 @@
-You are a **frontend software engineer** working on an existing internal product.
+User: You are a **frontend software engineer** working on an existing internal product.
 
 You are given a **working baseline web UI demo** for a **Task Management Dashboard**.
 The baseline source code has already been provided to you.
@@ -157,3 +157,77 @@ You must submit:
 * Usage guide is missing or misleading
 * Code is unnecessarily rewritten
 * README is incomplete
+
+
+GitHub Copilot: Quick check: I'll list project files to find HTML/CSS/JS to update.
+
+Searched for files matching `**/*`, 3 matches
+
+Found index.html and app.js — I'll open index.html to see current markup.
+
+Read [](file:///c%3A/Bug_Bash/25_12_17/v-coralhuang_25_12_17_case2/index.html)
+
+Now opening app.js to see behavior and where to implement features.
+
+Read [](file:///c%3A/Bug_Bash/25_12_17/v-coralhuang_25_12_17_case2/app.js)
+
+Found places to improve layout and add sidebar, loader, and error UI — I'll update index.html styles and main markup now.
+
+Using "Multi-Replace String in Files"
+
+
+```
+
+```
+Quick follow-up: I'll open index.html to confirm the changes applied and find the remaining region if needed.
+
+Read [](file:///c%3A/Bug_Bash/25_12_17/v-coralhuang_25_12_17_case2/index.html)
+
+Next: I'll replace the original container markup with the improved main + sidebar block (adds banners, empty state, and usage guide).
+
+Using "Replace String in File"
+
+
+```
+
+```
+Next I'll update app.js to add loading/error handling, title highlighting, inline status updates (with simulated delays/failures), and empty-state behavior.
+
+Using "Replace String in File"
+
+
+```
+
+```
+I'll add a README.md summarizing how to run the demo and the UI improvements I made.
+
+Created [](file:///c%3A/Bug_Bash/25_12_17/v-coralhuang_25_12_17_case2/README.md)
+
+I'll run a quick error check across the project files to confirm there are no obvious syntax issues.
+
+Checked [](file:///c%3A/Bug_Bash/25_12_17/v-coralhuang_25_12_17_case2/app.js), [](file:///c%3A/Bug_Bash/25_12_17/v-coralhuang_25_12_17_case2/index.html), no problems found
+
+Status: I updated the UI and behavior — implemented loading/error banners, inline status updates (with simulated delays/failures), search highlighting, empty state, usage guide sidebar, and polished styling.
+
+What I changed (files)
+- index.html — new styles, loading/error banners, empty state, persistent usage guide sidebar, improved layout/controls.
+- app.js — loading + simulated failures, retry, empty-state handling, search-term highlighting, inline advance-status logic (TODO → IN_PROGRESS → DONE) with row-level loading, success highlight and inline error handling.
+- README.md — how to run and short notes about improvements and design decisions.
+
+How to verify
+- Open index.html in a browser. The page shows a loading banner (occasionally will show a simulated load error with a Retry button). Try:
+  - Search (matches are highlighted),
+  - Filter and sort (click headers, active sort arrow is shown),
+  - Use the small arrow in the status cell to advance status (row shows spinner; some attempts will fail to demonstrate inline error),
+  - Trigger an empty state (search for nonsense) and use the Reset view button.
+
+If you'd like, I can:
+- Make the load/failure rates configurable for testing, or
+- Add small accessibility improvements (ARIA announcements / keyboard-only controls), or
+- Tweak visual details (colors, spacing, durations).
+
+(If you need me to run further checks or tweak something specific, tell me which area to prioritize.)
+
+GitHub Copilot
+
+Made changes.
