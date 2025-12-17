@@ -1,8 +1,10 @@
-You are a frontend software engineer working on an existing internal product.
+You are a **frontend software engineer** working on an existing internal product.
+
 You are given a **working baseline web UI demo** for a **Task Management Dashboard**.
 The baseline source code has already been provided to you.
 
-The application is implemented using **plain HTML, CSS, and vanilla JavaScript** (no framework, no build tools).
+The application is implemented using **plain HTML, CSS, and vanilla JavaScript**
+(no framework, no build tools, no external UI libraries).
 
 The baseline application **runs correctly** and must **not be rewritten from scratch**.
 
@@ -28,38 +30,60 @@ The existing application provides the following features:
 * All data is loaded from a local mock data source
 * No loading indicators or error handling
 * No inline editing or state mutation
+* Minimal visual styling
 
 The baseline UI is intentionally simple and functional.
 
 ---
 
-## Your Task: Improve the Existing UI
+## Your Task: Improve and Polish the Existing UI
 
-You must **extend the provided baseline code** with usability and interaction improvements, while keeping all existing behavior working.
+You must **extend and enhance the provided baseline code** with **visual polish, usability improvements, and richer interactions**, while keeping all existing behavior working.
+
+This task focuses on **real-world UI quality**, not just functionality.
 
 ---
 
 ## Required Improvements
 
-### 1. Loading and Error Feedback
+### 1. Visual Design & Layout Polish (Mandatory)
+
+You must significantly improve the visual quality of the page:
+
+* Introduce a clear visual hierarchy (header, controls, content, footer areas)
+* Improve spacing, alignment, and typography
+* Use a consistent color palette for:
+
+  * Primary actions
+  * Secondary actions
+  * Status indicators
+* Add subtle shadows, borders, and hover transitions
+* Make the table visually easier to scan (row separation, hover feedback)
+* Ensure the layout works well on smaller screens (basic responsiveness)
+
+> Purely cosmetic changes are **not sufficient**; the UI should feel noticeably more professional.
+
+---
+
+### 2. Loading and Error Feedback
 
 * Add a visible loading indicator while task data is being fetched
-* Gracefully handle data loading failures
+* Gracefully handle simulated data loading failures
 * Display clear, user-friendly error messages
-* Loading and error states must not break the existing layout
+* Loading and error states must not break or shift the layout unexpectedly
 
 ---
 
-### 2. Filter and State Visibility Improvements
+### 3. Filter, State, and Context Visibility
 
-* Search and status filters must be clearly visible as active conditions
-* Show the currently applied filters in the UI
-* Add a one-click action to clear all filters and sorting
-* Improve visual distinction of task statuses (e.g. color tags or badges)
+* Search and status filters must be visually represented as **active state indicators**
+* Clearly show the currently applied filters above the table
+* Add a one-click action to clear **all filters, sorting, and pagination state**
+* Improve visual distinction of task statuses using color badges or labels
 
 ---
 
-### 3. Inline Task Status Update
+### 4. Inline Task Status Update (Interaction Complexity)
 
 * Allow users to update task status directly from the table
 * Status transitions must follow this order only:
@@ -68,36 +92,56 @@ You must **extend the provided baseline code** with usability and interaction im
 * While updating:
 
   * Show a loading indicator on the affected row
-  * Prevent duplicate actions
+  * Disable other actions for that row
 * On success:
 
   * Update the UI immediately without a page refresh
+  * Visually indicate the update (e.g., brief highlight)
 * On failure:
 
-  * Show an error message and revert the UI state
+  * Show an inline error message
+  * Revert the UI state
 
 (Mock update logic is acceptable; no backend required.)
 
 ---
 
-### 4. Usability Enhancements (All Required)
+### 5. Advanced Usability Enhancements (All Required)
 
-You must implement **all** of the following usability enhancements:
+You must implement **all** of the following:
 
-1. **Highlight matched keywords in search results**
+1. **Search Result Highlighting**
 
-* When a search query is non-empty, highlight the matching substring(s) in the **Title** column.
-* Highlighting must update live as the user types.
+* Highlight matched keywords in the **Title** column
+* Highlighting must update live as the user types
+* Highlighting must not break sorting or pagination
 
-2. **Improve empty-state UI when no tasks match filters**
+2. **Empty-State Design**
 
-* If the filtered result set is empty, replace the table body with a clear empty-state message.
-* The empty-state must include a one-click action to reset filters/sorting.
+* When no tasks match the current filters:
 
-3. **Add hover affordances to indicate clickable rows**
+  * Replace the table body with a designed empty-state view
+  * Include:
 
-* Make it visually obvious that rows are clickable (e.g., cursor change + subtle hover background + optional right-arrow indicator).
-* The affordance must not interfere with sorting or inline status controls.
+    * A short explanation
+    * A clear call-to-action to reset filters
+
+3. **Row Interaction Affordances**
+
+* Make it visually obvious that rows are interactive:
+
+  * Cursor changes
+  * Hover background
+  * Optional icon or indicator
+* Affordances must coexist cleanly with inline status updates
+
+4. **Recently Updated Task Emphasis**
+
+* When a task status is updated:
+
+  * Visually mark it as recently updated
+  * Keep it highlighted for a short duration
+* This must not break sorting or filtering logic
 
 ---
 
@@ -109,6 +153,7 @@ You must implement **all** of the following usability enhancements:
 * All state must remain client-side
 * Keep the code readable and maintainable
 * Incremental improvement is expected, not a full redesign
+* Avoid unnecessary abstractions
 
 ---
 
@@ -117,13 +162,13 @@ You must implement **all** of the following usability enhancements:
 You must submit:
 
 * Updated HTML, CSS, and JavaScript source code
-* Improved UI styles with clear visual hierarchy
+* Significantly improved UI styles
 * A **README.md** that includes:
 
   * How to run the demo locally
-  * A summary of improvements made
-  * Explanation of how inline status updates work
-  * Notes on key design decisions
+  * A summary of visual and functional improvements
+  * Explanation of inline status update logic
+  * Notes on key design and UX decisions
 
 ---
 
@@ -132,15 +177,17 @@ You must submit:
 ### Pass
 
 * Baseline behavior remains fully functional
-* Improvements clearly enhance usability and clarity
-* UI feedback is visible and consistent
+* UI is visibly more polished and professional
+* Interaction feedback is clear and consistent
+* State changes are predictable and well handled
 * Code changes are incremental and understandable
 * README allows full reproduction
 
 ### Fail
 
 * Baseline functionality is broken
-* Improvements are cosmetic only
-* State handling is inconsistent or confusing
+* Changes are mostly cosmetic without interaction depth
+* State handling is fragile or confusing
+* UI feels inconsistent or unfinished
 * Code is rewritten unnecessarily
 * README is missing or unclear
