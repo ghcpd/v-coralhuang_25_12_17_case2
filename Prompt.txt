@@ -10,150 +10,116 @@ The baseline application **runs correctly** and must **not be rewritten from scr
 
 ---
 
-## Baseline Functionality (Already Implemented)
+## Baseline Functionality
 
-The existing application provides the following features:
+The baseline application already supports a basic task dashboard, including:
 
-* A single dashboard page displaying a list of tasks
-* Each task includes:
+* A task table with search, filter, sorting, and pagination
+* Read-only task detail view
+* Local mock data
+* Minimal styling and no advanced UI feedback
 
-  * Task ID
-  * Title
-  * Assignee
-  * Status (`TODO`, `IN_PROGRESS`, `DONE`)
-  * Created At timestamp
-* Search tasks by title keyword
-* Filter tasks by status
-* Sort tasks by clicking table headers (single-column sort)
-* Client-side pagination with configurable page size
-* Click a table row to open a **read-only task detail modal**
-* All data is loaded from a local mock data source
-* No loading indicators or error handling
-* No inline editing or state mutation
-* Minimal visual styling
-
-The baseline UI is intentionally simple and functional.
+The baseline is intentionally simple and functional.
 
 ---
 
-## Your Task: Improve and Polish the Existing UI
+## Your Task
 
-You must **extend and enhance the provided baseline code** with **visual polish, usability improvements, and richer interactions**, while keeping all existing behavior working.
+Improve and polish the existing UI by adding **visual quality, clearer feedback, richer interactions, and in-context guidance**, while keeping all baseline behavior intact.
 
-This task focuses on **real-world UI quality**, not just functionality.
+This task focuses on **real-world frontend craftsmanship**, not just feature completeness.
 
 ---
 
 ## Required Improvements
 
-### 1. Visual Design & Layout Polish (Mandatory)
+### 1. UI Visual Quality & Frontend Polish (Mandatory)
 
-You must significantly improve the visual quality of the page:
+You must significantly improve the overall look and feel of the application.
 
-* Introduce a clear visual hierarchy (header, controls, content, footer areas)
-* Improve spacing, alignment, and typography
-* Use a consistent color palette for:
+This includes, but is not limited to:
 
-  * Primary actions
-  * Secondary actions
-  * Status indicators
-* Add subtle shadows, borders, and hover transitions
-* Make the table visually easier to scan (row separation, hover feedback)
-* Ensure the layout works well on smaller screens (basic responsiveness)
+* A clear and structured layout (header, controls, content area, sidebar)
+* Improved spacing, typography, and alignment
+* A consistent and intentional color system
+* Clear visual hierarchy between primary and secondary elements
+* Polished table presentation with hover states and readable density
+* Subtle animations or transitions where appropriate
+* Reasonable responsiveness on smaller screens
 
-> Purely cosmetic changes are **not sufficient**; the UI should feel noticeably more professional.
-
----
-
-### 2. Loading and Error Feedback
-
-* Add a visible loading indicator while task data is being fetched
-* Gracefully handle simulated data loading failures
-* Display clear, user-friendly error messages
-* Loading and error states must not break or shift the layout unexpectedly
+The UI should feel **intentional, modern, and production-quality**, not just restyled.
 
 ---
 
-### 3. Filter, State, and Context Visibility
+### 2. Loading, Error, and State Feedback
 
-* Search and status filters must be visually represented as **active state indicators**
-* Clearly show the currently applied filters above the table
-* Add a one-click action to clear **all filters, sorting, and pagination state**
-* Improve visual distinction of task statuses using color badges or labels
+* Display a loading indicator while tasks are being fetched
+* Handle simulated loading failures with clear error messages
+* Avoid layout jumps during loading or error states
+* Clearly indicate active search, filters, and sorting
+* Provide a single action to reset all view state (filters, sorting, pagination)
 
 ---
 
-### 4. Inline Task Status Update (Interaction Complexity)
+### 3. Inline Task Status Updates
 
-* Allow users to update task status directly from the table
-* Status transitions must follow this order only:
-
-  * `TODO → IN_PROGRESS → DONE`
+* Allow task status updates directly within the table
+* Enforce the transition order: `TODO → IN_PROGRESS → DONE`
 * While updating:
 
-  * Show a loading indicator on the affected row
-  * Disable other actions for that row
+  * Show row-level loading
+  * Prevent duplicate actions
 * On success:
 
-  * Update the UI immediately without a page refresh
-  * Visually indicate the update (e.g., brief highlight)
+  * Update the UI immediately
+  * Briefly highlight the updated task
 * On failure:
 
-  * Show an inline error message
-  * Revert the UI state
+  * Show an inline error and revert state
 
 (Mock update logic is acceptable; no backend required.)
 
 ---
 
-### 5. Advanced Usability Enhancements (All Required)
+### 4. Usability Enhancements (All Required)
 
-You must implement **all** of the following:
+Implement all of the following:
 
-1. **Search Result Highlighting**
+* Highlight matching keywords in task titles during search
+* Provide a clear empty-state view when no tasks match current filters, including a reset action
+* Make table rows clearly interactive through hover and cursor feedback
+* Visually mark recently updated tasks for a short duration without breaking sorting or filtering
 
-* Highlight matched keywords in the **Title** column
-* Highlighting must update live as the user types
-* Highlighting must not break sorting or pagination
+---
 
-2. **Empty-State Design**
+### 5. Usage Guide Sidebar
 
-* When no tasks match the current filters:
+Add a **persistent usage guide sidebar** to the page.
 
-  * Replace the table body with a designed empty-state view
-  * Include:
+The sidebar must:
 
-    * A short explanation
-    * A clear call-to-action to reset filters
+* Be visible alongside the main content (not a modal)
+* Briefly explain how to:
 
-3. **Row Interaction Affordances**
+  * Search tasks
+  * Filter and sort results
+  * Navigate pagination
+  * Update task status inline
+* Use concise, instructional language
+* Be visually distinct but unobtrusive
+* Adapt reasonably on smaller screens (collapsible or stacked layout is acceptable)
 
-* Make it visually obvious that rows are interactive:
-
-  * Cursor changes
-  * Hover background
-  * Optional icon or indicator
-* Affordances must coexist cleanly with inline status updates
-
-4. **Recently Updated Task Emphasis**
-
-* When a task status is updated:
-
-  * Visually mark it as recently updated
-  * Keep it highlighted for a short duration
-* This must not break sorting or filtering logic
+The usage guide must be part of the UI itself, not only documented in README.
 
 ---
 
 ## Constraints
 
-* Do not remove or break any existing baseline features
+* Do not remove or break existing functionality
 * Do not rewrite the application using a framework
-* Do not introduce a backend or external services
-* All state must remain client-side
-* Keep the code readable and maintainable
-* Incremental improvement is expected, not a full redesign
-* Avoid unnecessary abstractions
+* No backend or external services
+* All state remains client-side
+* Incremental improvement only; avoid unnecessary abstraction
 
 ---
 
@@ -162,13 +128,13 @@ You must implement **all** of the following:
 You must submit:
 
 * Updated HTML, CSS, and JavaScript source code
-* Significantly improved UI styles
-* A **README.md** that includes:
+* Clearly improved UI styling
+* A **README.md** describing:
 
-  * How to run the demo locally
-  * A summary of visual and functional improvements
-  * Explanation of inline status update logic
-  * Notes on key design and UX decisions
+  * How to run the demo
+  * Key UI and interaction improvements
+  * How inline status updates work
+  * Design decisions, including the usage guide sidebar
 
 ---
 
@@ -176,18 +142,18 @@ You must submit:
 
 ### Pass
 
-* Baseline behavior remains fully functional
-* UI is visibly more polished and professional
-* Interaction feedback is clear and consistent
-* State changes are predictable and well handled
-* Code changes are incremental and understandable
+* Baseline behavior remains intact
+* UI is clearly more polished, modern, and usable
+* Feedback and state changes are clear and consistent
+* Usage guide sidebar is accurate and helpful
+* Code changes are readable and incremental
 * README allows full reproduction
 
 ### Fail
 
 * Baseline functionality is broken
-* Changes are mostly cosmetic without interaction depth
-* State handling is fragile or confusing
-* UI feels inconsistent or unfinished
-* Code is rewritten unnecessarily
-* README is missing or unclear
+* UI improvements are superficial
+* State handling is confusing or fragile
+* Usage guide is missing or misleading
+* Code is unnecessarily rewritten
+* README is incomplete
