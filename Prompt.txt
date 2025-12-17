@@ -1,0 +1,146 @@
+You are a frontend software engineer working on an existing internal product.
+You are given a **working baseline web UI demo** for a **Task Management Dashboard**.
+The baseline source code has already been provided to you.
+
+The application is implemented using **plain HTML, CSS, and vanilla JavaScript** (no framework, no build tools).
+
+The baseline application **runs correctly** and must **not be rewritten from scratch**.
+
+---
+
+## Baseline Functionality (Already Implemented)
+
+The existing application provides the following features:
+
+* A single dashboard page displaying a list of tasks
+* Each task includes:
+
+  * Task ID
+  * Title
+  * Assignee
+  * Status (`TODO`, `IN_PROGRESS`, `DONE`)
+  * Created At timestamp
+* Search tasks by title keyword
+* Filter tasks by status
+* Sort tasks by clicking table headers (single-column sort)
+* Client-side pagination with configurable page size
+* Click a table row to open a **read-only task detail modal**
+* All data is loaded from a local mock data source
+* No loading indicators or error handling
+* No inline editing or state mutation
+
+The baseline UI is intentionally simple and functional.
+
+---
+
+## Your Task: Improve the Existing UI
+
+You must **extend the provided baseline code** with usability and interaction improvements, while keeping all existing behavior working.
+
+---
+
+## Required Improvements
+
+### 1. Loading and Error Feedback
+
+* Add a visible loading indicator while task data is being fetched
+* Gracefully handle data loading failures
+* Display clear, user-friendly error messages
+* Loading and error states must not break the existing layout
+
+---
+
+### 2. Filter and State Visibility Improvements
+
+* Search and status filters must be clearly visible as active conditions
+* Show the currently applied filters in the UI
+* Add a one-click action to clear all filters and sorting
+* Improve visual distinction of task statuses (e.g. color tags or badges)
+
+---
+
+### 3. Inline Task Status Update
+
+* Allow users to update task status directly from the table
+* Status transitions must follow this order only:
+
+  * `TODO → IN_PROGRESS → DONE`
+* While updating:
+
+  * Show a loading indicator on the affected row
+  * Prevent duplicate actions
+* On success:
+
+  * Update the UI immediately without a page refresh
+* On failure:
+
+  * Show an error message and revert the UI state
+
+(Mock update logic is acceptable; no backend required.)
+
+---
+
+### 4. Usability Enhancements (All Required)
+
+You must implement **all** of the following usability enhancements:
+
+1. **Highlight matched keywords in search results**
+
+* When a search query is non-empty, highlight the matching substring(s) in the **Title** column.
+* Highlighting must update live as the user types.
+
+2. **Improve empty-state UI when no tasks match filters**
+
+* If the filtered result set is empty, replace the table body with a clear empty-state message.
+* The empty-state must include a one-click action to reset filters/sorting.
+
+3. **Add hover affordances to indicate clickable rows**
+
+* Make it visually obvious that rows are clickable (e.g., cursor change + subtle hover background + optional right-arrow indicator).
+* The affordance must not interfere with sorting or inline status controls.
+
+---
+
+## Constraints
+
+* Do not remove or break any existing baseline features
+* Do not rewrite the application using a framework
+* Do not introduce a backend or external services
+* All state must remain client-side
+* Keep the code readable and maintainable
+* Incremental improvement is expected, not a full redesign
+
+---
+
+## Deliverables
+
+You must submit:
+
+* Updated HTML, CSS, and JavaScript source code
+* Improved UI styles with clear visual hierarchy
+* A **README.md** that includes:
+
+  * How to run the demo locally
+  * A summary of improvements made
+  * Explanation of how inline status updates work
+  * Notes on key design decisions
+
+---
+
+## Evaluation Criteria
+
+### Pass
+
+* Baseline behavior remains fully functional
+* Improvements clearly enhance usability and clarity
+* UI feedback is visible and consistent
+* Code changes are incremental and understandable
+* README allows full reproduction
+
+### Fail
+
+* Baseline functionality is broken
+* Improvements are cosmetic only
+* State handling is inconsistent or confusing
+* Code is rewritten unnecessarily
+* README is missing or unclear
