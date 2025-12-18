@@ -5,36 +5,80 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Task Dashboard - Baseline Demo</title>
     <style>
-      body { font-family: Arial, Helvetica, sans-serif; margin: 0; background: #f6f7f9; }
-      header { background: #1f2937; color: #fff; padding: 12px 16px; }
-      .container { padding: 16px; max-width: 1100px; margin: 0 auto; }
-      .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px; }
-      .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
-      input, select, button {
-        height: 34px; border: 1px solid #d1d5db; border-radius: 6px; padding: 0 10px;
-        background: #fff; font-size: 14px;
+      :root{
+        --bg: #f4f6f8;
+        --card: #ffffff;
+        --muted: #6b7280;
+        --accent: #2563eb;
+        --accent-600: #1e40af;
+        --success: #10b981;
+        --danger: #ef4444;
+        --surface-border: #e6e9ee;
       }
-      button { cursor: pointer; }
-      button:active { transform: translateY(1px); }
-      table { width: 100%; border-collapse: collapse; margin-top: 12px; }
-      th, td { padding: 10px 8px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 14px; }
-      th { user-select: none; cursor: pointer; background: #fafafa; }
-      tr:hover { background: #f9fafb; }
-      .muted { color: #6b7280; font-size: 12px; }
-      .pager { display: flex; gap: 8px; align-items: center; justify-content: flex-end; margin-top: 10px; }
-      .pager button { height: 30px; }
-      .pill { padding: 2px 8px; border-radius: 999px; border: 1px solid #e5e7eb; font-size: 12px; background: #fff; }
 
-      /* Modal */
-      .backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.35); display: none; align-items: center; justify-content: center; padding: 16px; }
-      .modal { width: 520px; max-width: 100%; background: #fff; border-radius: 10px; border: 1px solid #e5e7eb; }
-      .modal-hd { padding: 12px 14px; border-bottom: 1px solid #e5e7eb; display:flex; justify-content: space-between; align-items:center; }
-      .modal-bd { padding: 14px; }
-      .kv { display: grid; grid-template-columns: 120px 1fr; gap: 8px; margin-bottom: 10px; }
-      .k { color:#374151; font-weight: 600; }
-      .v { color:#111827; }
-      .xbtn { border: none; background: transparent; font-size: 18px; cursor: pointer; padding: 4px 8px; }
-    </style>
+      *{box-sizing:border-box}
+      body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; margin: 0; background: var(--bg); color: #0f172a; -webkit-font-smoothing:antialiased; }
+
+      header { background: linear-gradient(90deg,#111827 0%, #0b1220 100%); color: #fff; padding: 16px 20px; box-shadow: 0 2px 8px rgba(15,23,42,0.06); }
+      header .wrap { max-width: 1200px; margin: 0 auto; display:flex; align-items:center; justify-content:space-between; gap:12px }
+      header h1 { margin:0; font-size:18px; font-weight:700; letter-spacing: -0.2px }
+      header .sub { color: rgba(255,255,255,0.8); font-size:13px }
+
+      .main-wrap { max-width:1200px; margin: 20px auto; padding: 0 16px; display:grid; grid-template-columns: 1fr 320px; gap: 18px; align-items:start; }
+
+      /* Card */
+      .card { background: var(--card); border: 1px solid var(--surface-border); border-radius: 10px; padding: 14px; box-shadow: 0 1px 2px rgba(15,23,42,0.03); }
+
+      /* controls */
+      .controls { display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:12px }
+      .controls input[type="search"], .controls select, .controls button { height:36px; border:1px solid var(--surface-border); background:var(--card); padding: 0 10px; border-radius:8px; font-size:14px }
+      .controls .primary { background: linear-gradient(180deg,var(--accent),var(--accent-600)); color:#fff; border:none }
+      .controls .ghost { background:transparent; border:1px dashed var(--surface-border); }
+      .controls .pill { padding: 6px 10px; border-radius:999px; font-size:13px; background:#f8fafc; border:1px solid var(--surface-border); }
+
+      /* table */
+      .table-wrap { width:100%; overflow:auto }
+      table { width:100%; border-collapse: collapse; margin-top:6px; min-width: 720px }
+      th, td { padding: 12px 14px; border-bottom: 1px solid var(--surface-border); text-align:left; font-size:14px }
+      thead th { background: transparent; color: #111827; font-weight:600; cursor:pointer; white-space:nowrap; position:relative }
+      thead th .sort { font-size:12px; color:var(--muted); margin-left:8px }
+      tbody tr { transition: background 180ms ease, transform 180ms ease; }
+      tbody tr:hover { background: #f8fafc; transform: translateY(-1px); cursor: pointer }
+      tbody tr.recent-updated { box-shadow: inset 4px 0 0 0 rgba(59,130,246,0.12); background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(245,250,255,1) 8%); animation: highlightFade 1.6s ease forwards }
+
+      @keyframes highlightFade { from { background-color: rgba(59,130,246,0.06)} to { background-color: transparent }}
+
+      .status-btn { display:inline-flex; gap:8px; align-items:center; padding:6px 8px; border-radius:8px; border:1px solid var(--surface-border); background:#fff; font-weight:600; color:#0f172a; }
+      .status-btn[disabled]{ opacity:0.6; cursor:not-allowed }
+      .status-todo { color:#0f172a; border-color: #f3f4f6; }
+      .status-inprogress { color: #b45309; border-color: #ffedd5; background: #fff7ed }
+      .status-done { color: var(--success); border-color: #dcfce7; background:#ecfdf5 }
+
+      .muted { color:var(--muted); font-size:13px }
+
+      /* small helpers */
+      .muted-xs { color:var(--muted); font-size:12px }
+      .hl { background: linear-gradient(90deg,#fde68a 0%, #fef3c7 100%); padding:0 4px; border-radius:4px }
+
+      /* spinner */
+      .spinner { width:14px; height:14px; border-radius:50%; border:2px solid rgba(0,0,0,0.08); border-top-color: rgba(0,0,0,0.35); animation: spin 0.9s linear infinite }
+      @keyframes spin { to { transform: rotate(360deg) } }
+
+      /* skeleton */
+      .skeleton-row td { background: linear-gradient(90deg,#f0f2f5 25%, #f8fafc 50%, #f0f2f5 75%); background-size:200% 100%; animation: shimmer 1.2s linear infinite }
+      @keyframes shimmer { 0% { background-position: 200% 0 } 100% { background-position: -200% 0 } }
+
+      /* empty */
+      .empty { padding: 28px; text-align:center; color:var(--muted) }
+
+      /* sidebar */
+      aside.guide { position:sticky; top:86px; height: calc(100vh - 110px); padding:14px; display:flex; flex-direction:column; gap:12px }
+      aside .hd { font-weight:700; margin-bottom:6px }
+      aside .step { background:#fff; border:1px solid var(--surface-border); padding:10px; border-radius:8px; font-size:13px }
+
+      /* responsive */
+      @media (max-width: 900px) { .main-wrap { grid-template-columns: 1fr; } aside.guide { position:static; height:auto } table { min-width: 600px } }
+    </style> 
   </head>
   <body>
     <header>
@@ -44,11 +88,12 @@
       </div>
     </header>
 
-    <div class="container">
-      <div class="card">
-        <div class="row">
-          <input id="q" placeholder="Search by title..." style="width:260px;" />
+    <div class="main-wrap">
+      <main class="card">
+        <div class="controls">
+          <input id="q" type="search" placeholder="Search by title..." aria-label="Search" style="width:320px;" />
 
+          <label class="muted-xs" for="status">Status</label>
           <select id="status" aria-label="Status filter">
             <option value="ALL">All Status</option>
             <option value="TODO">TODO</option>
@@ -56,26 +101,41 @@
             <option value="DONE">DONE</option>
           </select>
 
-          <button id="reset" type="button">Reset</button>
+          <button id="reset" type="button" class="ghost">Reset view</button>
 
-          <span class="pill" id="summary">0 items</span>
-          <span class="muted">Click headers to sort. Click a row to view details.</span>
+          <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+            <label class="muted-xs" style="display:flex;gap:8px;align-items:center"><input id="simulateFail" type="checkbox" /> Simulate load error</label>
+            <span class="pill" id="summary">0 items</span>
+          </div>
         </div>
 
-        <table aria-label="Task table">
-          <thead>
-            <tr>
-              <th data-key="id">Task ID</th>
-              <th data-key="title">Title</th>
-              <th data-key="assignee">Assignee</th>
-              <th data-key="status">Status</th>
-              <th data-key="createdAt">Created At</th>
-            </tr>
-          </thead>
-          <tbody id="tbody"></tbody>
-        </table>
+        <div id="statusBar" style="display:flex;gap:10px;align-items:center;margin-bottom:8px">
+          <div id="activeFilters" class="muted-xs"></div>
+          <div id="loadError" style="color:var(--danger);font-weight:600;display:none"></div>
+        </div>
 
-        <div class="pager">
+        <div class="table-wrap card" style="padding:12px">
+          <table aria-label="Task table">
+            <thead>
+              <tr>
+                <th data-key="id">Task ID <span class="sort"></span></th>
+                <th data-key="title">Title <span class="sort"></span></th>
+                <th data-key="assignee">Assignee <span class="sort"></span></th>
+                <th data-key="status">Status <span class="sort"></span></th>
+                <th data-key="createdAt">Created At <span class="sort"></span></th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+
+          <div id="empty" class="empty" style="display:none">
+            <div style="font-size:16px;font-weight:700;margin-bottom:6px">No tasks match your filters</div>
+            <div class="muted" style="margin-bottom:12px">Try clearing filters or resetting the view to see tasks again.</div>
+            <button id="emptyReset" class="primary">Reset view</button>
+          </div>
+        </div>
+
+        <div class="pager" style="margin-top:12px">
           <span class="muted">Page size</span>
           <select id="pageSize" aria-label="Page size">
             <option value="5">5</option>
@@ -87,7 +147,16 @@
           <span id="pageInfo" class="muted"></span>
           <button id="next" type="button">Next</button>
         </div>
-      </div>
+      </main>
+
+      <aside class="guide card">
+        <div class="hd">Quick Usage Guide</div>
+        <div class="step"><strong>Search</strong><div class="muted-xs">Type keywords in the search field. Matches are highlighted in titles.</div></div>
+        <div class="step"><strong>Filter & Sort</strong><div class="muted-xs">Use the status filter and click column headers to sort. Click again to cycle sort direction.</div></div>
+        <div class="step"><strong>Pagination</strong><div class="muted-xs">Change page size or use Prev/Next to navigate pages.</div></div>
+        <div class="step"><strong>Inline Status</strong><div class="muted-xs">Click the <em>Advance</em> button in a row to progress a task: TODO → IN_PROGRESS → DONE. Rows show a spinner while updating and are briefly highlighted on success.</div></div>
+        <div style="margin-top:auto;font-size:12px;color:var(--muted)">Tip: Use the "Simulate load error" checkbox to preview error handling.</div>
+      </aside>
     </div>
 
     <!-- Modal -->
