@@ -5,35 +5,94 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Task Dashboard - Baseline Demo</title>
     <style>
-      body { font-family: Arial, Helvetica, sans-serif; margin: 0; background: #f6f7f9; }
-      header { background: #1f2937; color: #fff; padding: 12px 16px; }
-      .container { padding: 16px; max-width: 1100px; margin: 0 auto; }
-      .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px; }
-      .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
-      input, select, button {
-        height: 34px; border: 1px solid #d1d5db; border-radius: 6px; padding: 0 10px;
-        background: #fff; font-size: 14px;
+      :root{
+        --bg:#f4f6f8; --card:#ffffff; --muted:#6b7280; --border:#e6e9ee;
+        --accent:#2563eb; --accent-600:#1d4ed8; --success:#10b981; --danger:#ef4444;
+        --glass: rgba(15,23,42,0.04);
       }
-      button { cursor: pointer; }
-      button:active { transform: translateY(1px); }
-      table { width: 100%; border-collapse: collapse; margin-top: 12px; }
-      th, td { padding: 10px 8px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 14px; }
-      th { user-select: none; cursor: pointer; background: #fafafa; }
-      tr:hover { background: #f9fafb; }
-      .muted { color: #6b7280; font-size: 12px; }
-      .pager { display: flex; gap: 8px; align-items: center; justify-content: flex-end; margin-top: 10px; }
-      .pager button { height: 30px; }
-      .pill { padding: 2px 8px; border-radius: 999px; border: 1px solid #e5e7eb; font-size: 12px; background: #fff; }
 
-      /* Modal */
-      .backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.35); display: none; align-items: center; justify-content: center; padding: 16px; }
-      .modal { width: 520px; max-width: 100%; background: #fff; border-radius: 10px; border: 1px solid #e5e7eb; }
-      .modal-hd { padding: 12px 14px; border-bottom: 1px solid #e5e7eb; display:flex; justify-content: space-between; align-items:center; }
-      .modal-bd { padding: 14px; }
-      .kv { display: grid; grid-template-columns: 120px 1fr; gap: 8px; margin-bottom: 10px; }
-      .k { color:#374151; font-weight: 600; }
-      .v { color:#111827; }
-      .xbtn { border: none; background: transparent; font-size: 18px; cursor: pointer; padding: 4px 8px; }
+      *{box-sizing:border-box}
+      html,body{height:100%}
+      body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; margin: 0; background: var(--bg); color:#0f172a; }
+
+      header { background: linear-gradient(90deg,#0f172a,#0b1220); color: #fff; padding: 18px 16px; box-shadow: 0 2px 8px rgba(2,6,23,0.35); }
+      header .wrap{max-width:1200px;margin:0 auto;display:flex;gap:12px;align-items:center;justify-content:space-between}
+      header h1{font-size:18px;margin:0;font-weight:700;letter-spacing:0.2px}
+      header p{margin:0;color:rgba(255,255,255,0.85);font-size:13px}
+
+      .container{max-width:1200px;margin:20px auto;padding:0 16px;display:grid;grid-template-columns:1fr 280px;gap:18px}
+
+      /* Main card */
+      .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;box-shadow:0 1px 0 rgba(16,24,40,0.03)}
+      .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+      .controls .left{display:flex;gap:10px;align-items:center}
+
+      input[type='text'], select, button{height:38px;border:1px solid var(--border);border-radius:8px;padding:0 12px;background:#fff;font-size:13px;color:var(--muted)}
+      input[type='text']{min-width:240px;box-shadow:inset 0 1px 0 rgba(2,6,23,0.03)}
+      button{cursor:pointer;background:linear-gradient(180deg,#fff,#f8fafc);color:#0f172a;border-radius:8px}
+      button.primary{background:linear-gradient(180deg,var(--accent),var(--accent-600));color:#fff;border:1px solid rgba(13,42,148,0.9);box-shadow:0 6px 18px rgba(37,99,235,0.18)}
+      button.ghost{background:transparent;border:1px solid var(--border);color:var(--muted)}
+
+      .pill{padding:6px 10px;border-radius:999px;border:1px solid var(--border);font-size:13px;background:var(--glass);color:var(--muted)}
+      .muted{color:var(--muted);font-size:13px}
+
+      table{width:100%;border-collapse:collapse;margin-top:6px;font-size:14px}
+      thead th{background:transparent;padding:12px 10px;text-align:left;color:var(--muted);font-size:13px;border-bottom:1px solid var(--border);cursor:pointer;position:relative}
+      thead th .sort{font-size:11px;color:var(--muted);margin-left:8px;opacity:0.9}
+      tbody td{padding:12px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
+
+      tbody tr{transition:background .18s ease,transform .12s ease;cursor:pointer}
+      tbody tr:hover{background:rgba(15,23,42,0.03);transform:translateY(-1px)}
+
+      .status{display:inline-flex;gap:8px;align-items:center}
+      .status .tag{font-weight:600;font-size:12px;padding:6px 8px;border-radius:999px;border:1px solid var(--border);background:#fff;color:var(--muted)}
+      .tag.todo{color:#0f172a;background:linear-gradient(180deg,#fff,#fbfdff);border-color:#e6eefc}
+      .tag.inprog{color:#065f46;background:linear-gradient(180deg,#ecfdf5,#f8fffb);border-color:#d1fae5}
+      .tag.done{color:#065f46;background:linear-gradient(180deg,#f8fdf7,#f0fff7);border-color:#bbf7d0}
+
+      .row-action{display:inline-flex;gap:6px;align-items:center}
+      .icon-btn{height:30px;width:30px;border-radius:8px;border:1px solid var(--border);display:inline-grid;place-items:center;background:#fff;color:var(--muted);cursor:pointer}
+      .icon-btn[disabled]{opacity:0.6;cursor:not-allowed}
+
+      /* small spinner */
+      .spinner{width:16px;height:16px;border-radius:50%;border:2px solid rgba(0,0,0,0.08);border-top-color:var(--accent);animation:spin .9s linear infinite}
+      @keyframes spin{to{transform:rotate(360deg)}}
+
+      /* loading and error banner */
+      .banner{display:flex;gap:10px;align-items:center;padding:10px;border-radius:8px;margin-bottom:12px}
+      .banner.loading{background:linear-gradient(90deg,rgba(37,99,235,0.06),rgba(2,6,23,0.02));border:1px solid rgba(37,99,235,0.12);color:var(--accent)}
+      .banner.error{background:linear-gradient(90deg,rgba(239,68,68,0.06),rgba(2,6,23,0.02));border:1px solid rgba(239,68,68,0.12);color:var(--danger)}
+
+      .pager{display:flex;gap:8px;align-items:center;justify-content:flex-end;margin-top:12px}
+      .pager select{height:34px}
+
+      /* empty state */
+      .empty{padding:36px;text-align:center;color:var(--muted)}
+      .empty button{margin-top:12px}
+
+      /* updated highlight */
+      tr.updated td{box-shadow:inset 0 3px 0 rgba(16,185,129,0.10);animation:fadeOut 2.2s ease forwards}
+      @keyframes fadeOut{0%{background:rgba(16,185,129,0.08)}80%{background:rgba(16,185,129,0.04)}100%{background:transparent}}
+
+      /* inline error */
+      .inline-error{color:var(--danger);font-size:13px;margin-top:8px}
+
+      /* Modal tweaks */
+      .modal{width:560px;border-radius:12px}
+      .modal-hd{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+      .modal-bd{padding:16px}
+
+      /* sidebar */
+      aside.card{position:sticky;top:22px;height:fit-content}
+      aside h3{margin:0 0 8px 0;font-size:14px}
+      aside p{margin:6px 0;color:var(--muted);font-size:13px;line-height:1.4}
+      aside .kbd{display:inline-block;padding:6px 8px;border-radius:6px;border:1px solid var(--border);background:#fff;font-size:13px;margin:6px 4px 0 0}
+
+      /* responsive */
+      @media (max-width:880px){
+        .container{grid-template-columns:1fr;padding:0 12px}
+        aside.card{order:2;margin-top:6px}
+      }
     </style>
   </head>
   <body>
@@ -45,35 +104,51 @@
     </header>
 
     <div class="container">
-      <div class="card">
-        <div class="row">
-          <input id="q" placeholder="Search by title..." style="width:260px;" />
+      <main class="card" aria-live="polite">
+        <div id="loadingBanner" class="banner loading" style="display:none"><div class="spinner" aria-hidden="true"></div><div id="loadingText">Loading tasks…</div></div>
+        <div id="errorBanner" class="banner error" style="display:none"><div style="font-weight:700">Load failed</div><div id="errorText" style="flex:1;color:inherit;opacity:0.95">Could not fetch tasks. <button id="retry" class="ghost" style="margin-left:8px">Retry</button></div></div>
 
-          <select id="status" aria-label="Status filter">
-            <option value="ALL">All Status</option>
-            <option value="TODO">TODO</option>
-            <option value="IN_PROGRESS">IN_PROGRESS</option>
-            <option value="DONE">DONE</option>
-          </select>
+        <div class="controls">
+          <div class="left">
+            <input id="q" type="text" placeholder="Search by title..." aria-label="Search" />
 
-          <button id="reset" type="button">Reset</button>
+            <select id="status" aria-label="Status filter">
+              <option value="ALL">All status</option>
+              <option value="TODO">TODO</option>
+              <option value="IN_PROGRESS">IN_PROGRESS</option>
+              <option value="DONE">DONE</option>
+            </select>
 
-          <span class="pill" id="summary">0 items</span>
-          <span class="muted">Click headers to sort. Click a row to view details.</span>
+            <button id="reset" type="button" class="ghost" title="Reset view">Reset view</button>
+
+            <span class="pill" id="summary">0 items</span>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="muted">Click headers to sort</span>
+          </div>
         </div>
 
-        <table aria-label="Task table">
-          <thead>
-            <tr>
-              <th data-key="id">Task ID</th>
-              <th data-key="title">Title</th>
-              <th data-key="assignee">Assignee</th>
-              <th data-key="status">Status</th>
-              <th data-key="createdAt">Created At</th>
-            </tr>
-          </thead>
-          <tbody id="tbody"></tbody>
-        </table>
+        <div id="tableWrap">
+          <table aria-label="Task table">
+            <thead>
+              <tr>
+                <th data-key="id">Task ID <span class="sort">#</span></th>
+                <th data-key="title">Title <span class="sort">🔎</span></th>
+                <th data-key="assignee">Assignee <span class="sort">👤</span></th>
+                <th data-key="status">Status <span class="sort">⚑</span></th>
+                <th data-key="createdAt">Created At <span class="sort">🕘</span></th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+
+          <div id="emptyState" class="card empty" style="display:none">
+            <div style="font-weight:700;margin-bottom:6px">No tasks match your filters</div>
+            <div class="muted">Try clearing search, changing filters, or reset the view.</div>
+            <button id="emptyReset" class="primary">Reset view</button>
+          </div>
+        </div>
 
         <div class="pager">
           <span class="muted">Page size</span>
@@ -83,11 +158,28 @@
             <option value="20">20</option>
           </select>
 
-          <button id="prev" type="button">Prev</button>
+          <button id="prev" type="button" class="ghost">Prev</button>
           <span id="pageInfo" class="muted"></span>
-          <button id="next" type="button">Next</button>
+          <button id="next" type="button" class="ghost">Next</button>
         </div>
-      </div>
+      </main>
+
+      <aside class="card" aria-labelledby="guideH">
+        <h3 id="guideH">Usage guide</h3>
+        <p>Quick tips to use the Task Dashboard. The guide is persistent and adapts for small screens.</p>
+        <p><strong>Search</strong> — Type keywords in the search box. Matches in titles are highlighted.</p>
+        <p><strong>Filter</strong> — Use the <span class="kbd">Status</span> dropdown to narrow results.</p>
+        <p><strong>Sort</strong> — Click any column header to sort (click again to reverse, click a third time to clear).</p>
+        <p><strong>Pagination</strong> — Use the pager controls to navigate pages and change page size.</p>
+        <p><strong>Inline updates</strong> — Click the small arrow button on a row to advance status (TODO → IN_PROGRESS → DONE). Row-level loading, success highlight and inline errors are shown.</p>
+        <div style="margin-top:12px">
+          <div class="muted" style="font-size:13px">Keyboard shortcuts</div>
+          <div style="margin-top:8px">
+            <span class="kbd">/</span>
+            <span class="kbd">Esc</span>
+          </div>
+        </div>
+      </aside>
     </div>
 
     <!-- Modal -->
