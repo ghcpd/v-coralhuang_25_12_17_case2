@@ -3,98 +3,643 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Task Dashboard - Baseline Demo</title>
+    <title>Task Dashboard - Polished Demo</title>
     <style>
-      body { font-family: Arial, Helvetica, sans-serif; margin: 0; background: #f6f7f9; }
-      header { background: #1f2937; color: #fff; padding: 12px 16px; }
-      .container { padding: 16px; max-width: 1100px; margin: 0 auto; }
-      .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px; }
-      .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
-      input, select, button {
-        height: 34px; border: 1px solid #d1d5db; border-radius: 6px; padding: 0 10px;
-        background: #fff; font-size: 14px;
+      * { box-sizing: border-box; }
+      
+      :root {
+        --primary: #2563eb;
+        --primary-light: #3b82f6;
+        --primary-lighter: #dbeafe;
+        --success: #10b981;
+        --success-light: #d1fae5;
+        --warning: #f59e0b;
+        --warning-light: #fef3c7;
+        --error: #ef4444;
+        --error-light: #fee2e2;
+        --text-dark: #1f2937;
+        --text-muted: #6b7280;
+        --border: #e5e7eb;
+        --bg-light: #f9fafb;
+        --bg-lighter: #f3f4f6;
+        --bg-lightest: #fafbfc;
       }
-      button { cursor: pointer; }
-      button:active { transform: translateY(1px); }
-      table { width: 100%; border-collapse: collapse; margin-top: 12px; }
-      th, td { padding: 10px 8px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 14px; }
-      th { user-select: none; cursor: pointer; background: #fafafa; }
-      tr:hover { background: #f9fafb; }
-      .muted { color: #6b7280; font-size: 12px; }
-      .pager { display: flex; gap: 8px; align-items: center; justify-content: flex-end; margin-top: 10px; }
-      .pager button { height: 30px; }
-      .pill { padding: 2px 8px; border-radius: 999px; border: 1px solid #e5e7eb; font-size: 12px; background: #fff; }
-
+      
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+        margin: 0;
+        background: #fafbfc;
+        color: var(--text-dark);
+      }
+      
+      header {
+        background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+        color: #fff;
+        padding: 20px 16px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      }
+      
+      header > div { max-width: 1400px; margin: 0 auto; }
+      .header-title { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+      .header-subtitle { color: #d1d5db; font-size: 14px; margin-top: 4px; }
+      
+      .main-wrapper { display: flex; min-height: calc(100vh - 80px); }
+      
+      .content-area {
+        flex: 1;
+        padding: 20px 16px;
+        overflow-y: auto;
+      }
+      
+      .content-area > div { max-width: 1200px; margin: 0 auto; }
+      
+      .sidebar {
+        width: 280px;
+        background: #fff;
+        border-left: 1px solid var(--border);
+        padding: 20px;
+        overflow-y: auto;
+        font-size: 13px;
+        line-height: 1.6;
+      }
+      
+      .sidebar-section {
+        margin-bottom: 20px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid var(--border);
+      }
+      
+      .sidebar-section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+      
+      .sidebar-title {
+        font-weight: 600;
+        color: var(--text-dark);
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      
+      .sidebar-content {
+        color: var(--text-muted);
+      }
+      
+      .sidebar-content p {
+        margin: 8px 0;
+      }
+      
+      .sidebar-content code {
+        background: var(--bg-lighter);
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: 'Monaco', 'Courier New', monospace;
+        font-size: 12px;
+      }
+      
+      .container { margin-bottom: 20px; }
+      
+      .card {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 16px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        transition: box-shadow 0.2s ease;
+      }
+      
+      .card:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      }
+      
+      .row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      
+      input, select {
+        height: 36px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 0 12px;
+        background: #fff;
+        font-size: 14px;
+        transition: all 0.2s ease;
+      }
+      
+      input:focus, select:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px var(--primary-lighter);
+      }
+      
+      button {
+        height: 36px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 0 16px;
+        background: #fff;
+        color: var(--text-dark);
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        position: relative;
+      }
+      
+      button:hover:not(:disabled) {
+        background: var(--bg-lighter);
+        border-color: #bfdbfe;
+      }
+      
+      button:active:not(:disabled) {
+        transform: translateY(0.5px);
+      }
+      
+      button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      
+      button.primary {
+        background: var(--primary);
+        color: #fff;
+        border-color: var(--primary);
+      }
+      
+      button.primary:hover:not(:disabled) {
+        background: var(--primary-light);
+        border-color: var(--primary-light);
+      }
+      
+      .reset-btn { margin-left: auto; }
+      
+      .loading-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--text-muted);
+      }
+      
+      .spinner {
+        width: 16px;
+        height: 16px;
+        border: 2px solid var(--border);
+        border-top-color: var(--primary);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+      
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+      
+      .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: var(--text-muted);
+      }
+      
+      .empty-state-icon {
+        font-size: 48px;
+        margin-bottom: 12px;
+        opacity: 0.5;
+      }
+      
+      .empty-state-title {
+        font-weight: 600;
+        color: var(--text-dark);
+        margin-bottom: 8px;
+        font-size: 16px;
+      }
+      
+      .empty-state-text {
+        margin-bottom: 16px;
+        font-size: 14px;
+      }
+      
+      .error-message {
+        background: var(--error-light);
+        border: 1px solid #fca5a5;
+        border-radius: 6px;
+        padding: 12px 14px;
+        color: #991b1b;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      
+      .error-icon { font-size: 18px; }
+      
+      .badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      
+      .badge-todo { background: #dbeafe; color: #0c4a6e; }
+      .badge-in-progress { background: var(--warning-light); color: #78350f; }
+      .badge-done { background: var(--success-light); color: #065f46; }
+      
+      .badge-sm { padding: 2px 6px; font-size: 11px; }
+      
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 12px;
+      }
+      
+      th, td {
+        padding: 12px 8px;
+        border-bottom: 1px solid var(--border);
+        text-align: left;
+        font-size: 14px;
+      }
+      
+      th {
+        user-select: none;
+        cursor: pointer;
+        background: var(--bg-lighter);
+        font-weight: 600;
+        color: var(--text-dark);
+        transition: background 0.2s ease;
+      }
+      
+      th:hover { background: #e5e7eb; }
+      
+      th.sortable::after {
+        content: ' ⇅';
+        opacity: 0.3;
+      }
+      
+      th.active { color: var(--primary); }
+      th.active.asc::after { content: ' ↑'; opacity: 1; }
+      th.active.desc::after { content: ' ↓'; opacity: 1; }
+      
+      tr {
+        transition: background 0.15s ease;
+      }
+      
+      tbody tr:hover {
+        background: var(--bg-lightest);
+        cursor: pointer;
+      }
+      
+      tbody tr.updating {
+        opacity: 0.7;
+      }
+      
+      tbody tr.success {
+        animation: highlight-success 1.5s ease;
+      }
+      
+      tbody tr.error {
+        background: var(--error-light);
+        animation: highlight-error 2s ease;
+      }
+      
+      @keyframes highlight-success {
+        0% { background: var(--success-light); }
+        100% { background: transparent; }
+      }
+      
+      @keyframes highlight-error {
+        0%, 100% { background: var(--error-light); }
+        50% { background: #fecaca; }
+      }
+      
+      .status-cell {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      
+      .status-dropdown {
+        padding: 4px 8px;
+        font-size: 13px;
+        height: auto;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      
+      .status-updating {
+        opacity: 0.6;
+        pointer-events: none;
+      }
+      
+      .inline-error {
+        color: var(--error);
+        font-size: 12px;
+        margin-top: 4px;
+        display: none;
+      }
+      
+      .inline-error.show { display: block; }
+      
+      .muted {
+        color: var(--text-muted);
+        font-size: 13px;
+      }
+      
+      .status-indicator {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 4px;
+      }
+      
+      .status-indicator.todo { background: #3b82f6; }
+      .status-indicator.in-progress { background: #f59e0b; }
+      .status-indicator.done { background: #10b981; }
+      
+      .pager {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 16px;
+        padding-top: 12px;
+        border-top: 1px solid var(--border);
+      }
+      
+      .pager-right { display: flex; gap: 8px; align-items: center; }
+      .pager button { height: 32px; padding: 0 12px; font-size: 13px; }
+      
+      .pill {
+        padding: 6px 12px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        font-size: 13px;
+        background: var(--bg-lighter);
+        color: var(--text-dark);
+        font-weight: 500;
+      }
+      
+      .pill.active {
+        background: var(--primary-lighter);
+        color: var(--primary);
+        border-color: var(--primary-light);
+      }
+      
       /* Modal */
-      .backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.35); display: none; align-items: center; justify-content: center; padding: 16px; }
-      .modal { width: 520px; max-width: 100%; background: #fff; border-radius: 10px; border: 1px solid #e5e7eb; }
-      .modal-hd { padding: 12px 14px; border-bottom: 1px solid #e5e7eb; display:flex; justify-content: space-between; align-items:center; }
-      .modal-bd { padding: 14px; }
-      .kv { display: grid; grid-template-columns: 120px 1fr; gap: 8px; margin-bottom: 10px; }
-      .k { color:#374151; font-weight: 600; }
-      .v { color:#111827; }
-      .xbtn { border: none; background: transparent; font-size: 18px; cursor: pointer; padding: 4px 8px; }
+      .backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.4);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        z-index: 1000;
+      }
+      
+      .backdrop.visible { display: flex; }
+      
+      .modal {
+        width: 520px;
+        max-width: 100%;
+        background: #fff;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+        animation: slideUp 0.3s ease;
+      }
+      
+      @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      
+      .modal-hd {
+        padding: 16px 18px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      
+      .modal-title {
+        font-weight: 700;
+        font-size: 16px;
+      }
+      
+      .modal-bd {
+        padding: 18px;
+      }
+      
+      .kv {
+        display: grid;
+        grid-template-columns: 120px 1fr;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+      
+      .k {
+        color: var(--text-dark);
+        font-weight: 600;
+        font-size: 13px;
+      }
+      
+      .v {
+        color: var(--text-dark);
+        font-size: 14px;
+      }
+      
+      .xbtn {
+        border: none;
+        background: transparent;
+        font-size: 20px;
+        cursor: pointer;
+        padding: 4px 8px;
+        color: var(--text-muted);
+        transition: color 0.2s ease;
+      }
+      
+      .xbtn:hover { color: var(--text-dark); }
+      
+      /* Responsive */
+      @media (max-width: 768px) {
+        .main-wrapper { flex-direction: column; }
+        .sidebar {
+          width: 100%;
+          border-left: none;
+          border-top: 1px solid var(--border);
+          padding: 16px;
+        }
+        .row { gap: 8px; }
+        input, select, button { height: 34px; padding: 0 10px; font-size: 13px; }
+        .reset-btn { margin-left: 0; margin-top: 8px; width: 100%; }
+        th, td { padding: 8px 4px; font-size: 12px; }
+        .pager { gap: 8px; font-size: 12px; }
+      }
     </style>
   </head>
   <body>
     <header>
-      <div style="max-width:1100px;margin:0 auto;">
-        <div style="font-size:16px;font-weight:700;">Task Dashboard (Baseline Demo)</div>
-        <div class="muted" style="color:#d1d5db;">List + Search + Filter + Sort + Pagination + Read-only Details</div>
+      <div>
+        <div class="header-title">📋 Task Dashboard</div>
+        <div class="header-subtitle">Manage, search, filter, and track task status in real-time</div>
       </div>
     </header>
 
-    <div class="container">
-      <div class="card">
-        <div class="row">
-          <input id="q" placeholder="Search by title..." style="width:260px;" />
+    <div class="main-wrapper">
+      <div class="content-area">
+        <div>
+          <!-- Loading State -->
+          <div id="loadingState" class="container" style="display:none;">
+            <div class="card" style="text-align:center; padding:40px;">
+              <div class="loading-indicator" style="justify-content:center;">
+                <div class="spinner"></div>
+                <span>Loading tasks...</span>
+              </div>
+            </div>
+          </div>
 
-          <select id="status" aria-label="Status filter">
-            <option value="ALL">All Status</option>
-            <option value="TODO">TODO</option>
-            <option value="IN_PROGRESS">IN_PROGRESS</option>
-            <option value="DONE">DONE</option>
-          </select>
+          <!-- Error State -->
+          <div id="errorState" class="container" style="display:none;">
+            <div class="error-message">
+              <span class="error-icon">⚠️</span>
+              <div>
+                <div style="font-weight:600;">Failed to load tasks</div>
+                <div id="errorText" style="font-size:13px; margin-top:4px;"></div>
+              </div>
+            </div>
+            <div class="card">
+              <button id="retryBtn" class="primary" type="button">Retry</button>
+            </div>
+          </div>
 
-          <button id="reset" type="button">Reset</button>
+          <!-- Main Content -->
+          <div id="mainContent" style="display:none;">
+            <div class="container">
+              <div class="card">
+                <div class="row">
+                  <input id="q" placeholder="Search by title..." style="width:240px;" aria-label="Search tasks" />
 
-          <span class="pill" id="summary">0 items</span>
-          <span class="muted">Click headers to sort. Click a row to view details.</span>
+                  <select id="status" aria-label="Filter by status">
+                    <option value="ALL">All Status</option>
+                    <option value="TODO">TODO</option>
+                    <option value="IN_PROGRESS">IN_PROGRESS</option>
+                    <option value="DONE">DONE</option>
+                  </select>
+
+                  <button id="reset" class="primary reset-btn" type="button">Clear All Filters</button>
+                </div>
+
+                <div class="row" style="margin-top:12px; justify-content:space-between;">
+                  <div>
+                    <span class="pill" id="summary">0 items</span>
+                    <span id="sortIndicator" class="pill" style="display:none;"></span>
+                  </div>
+                </div>
+
+                <div id="emptyState" style="display:none;">
+                  <div class="empty-state">
+                    <div class="empty-state-icon">🔍</div>
+                    <div class="empty-state-title">No tasks found</div>
+                    <div class="empty-state-text">Try adjusting your search or filters</div>
+                    <button id="resetFromEmpty" class="primary" type="button">Clear Filters</button>
+                  </div>
+                </div>
+
+                <div id="tableContainer" style="display:none;">
+                  <table aria-label="Task table">
+                    <thead>
+                      <tr>
+                        <th data-key="id" class="sortable">Task ID</th>
+                        <th data-key="title" class="sortable">Title</th>
+                        <th data-key="assignee" class="sortable">Assignee</th>
+                        <th class="sortable" data-key="status">Status</th>
+                        <th data-key="createdAt" class="sortable">Created At</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tbody"></tbody>
+                  </table>
+
+                  <div class="pager">
+                    <div>
+                      <span class="muted">Page size:</span>
+                      <select id="pageSize" aria-label="Page size" style="width:80px;">
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                        <option value="20">20</option>
+                      </select>
+                    </div>
+                    <div class="pager-right">
+                      <button id="prev" type="button">← Prev</button>
+                      <span id="pageInfo" class="muted"></span>
+                      <button id="next" type="button">Next →</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Usage Guide Sidebar -->
+      <div class="sidebar">
+        <div class="sidebar-section">
+          <div class="sidebar-title">🔍 Search</div>
+          <div class="sidebar-content">
+            <p>Type in the search box to find tasks by title. Matching keywords will be highlighted in real-time.</p>
+          </div>
         </div>
 
-        <table aria-label="Task table">
-          <thead>
-            <tr>
-              <th data-key="id">Task ID</th>
-              <th data-key="title">Title</th>
-              <th data-key="assignee">Assignee</th>
-              <th data-key="status">Status</th>
-              <th data-key="createdAt">Created At</th>
-            </tr>
-          </thead>
-          <tbody id="tbody"></tbody>
-        </table>
+        <div class="sidebar-section">
+          <div class="sidebar-title">⚙️ Filter & Sort</div>
+          <div class="sidebar-content">
+            <p>Click <code>Status</code> dropdown to filter by task state (TODO, IN_PROGRESS, DONE).</p>
+            <p>Click any table header to sort by that column. Click again to reverse order.</p>
+          </div>
+        </div>
 
-        <div class="pager">
-          <span class="muted">Page size</span>
-          <select id="pageSize" aria-label="Page size">
-            <option value="5">5</option>
-            <option value="10" selected>10</option>
-            <option value="20">20</option>
-          </select>
+        <div class="sidebar-section">
+          <div class="sidebar-title">📄 Pagination</div>
+          <div class="sidebar-content">
+            <p>Use the page size selector to change results per page. Navigate with Prev/Next buttons.</p>
+          </div>
+        </div>
 
-          <button id="prev" type="button">Prev</button>
-          <span id="pageInfo" class="muted"></span>
-          <button id="next" type="button">Next</button>
+        <div class="sidebar-section">
+          <div class="sidebar-title">✏️ Update Status</div>
+          <div class="sidebar-content">
+            <p>Click the status badge in any row to change task status. States progress: TODO → IN_PROGRESS → DONE.</p>
+            <p>Successfully updated tasks are briefly highlighted in green.</p>
+          </div>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-title">📋 View Details</div>
+          <div class="sidebar-content">
+            <p>Click any row to open a modal with full task information including creation date and assignee.</p>
+          </div>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-title">🔄 Reset</div>
+          <div class="sidebar-content">
+            <p>Click <code>Clear All Filters</code> to reset search, filter, sort, and pagination to defaults.</p>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Task Details Modal -->
     <div class="backdrop" id="backdrop">
       <div class="modal" role="dialog" aria-modal="true" aria-label="Task details dialog">
         <div class="modal-hd">
-          <div style="font-weight:700;">Task Details</div>
+          <div class="modal-title">Task Details</div>
           <button class="xbtn" id="close" aria-label="Close dialog" type="button">×</button>
         </div>
         <div class="modal-bd" id="modalBody"></div>
