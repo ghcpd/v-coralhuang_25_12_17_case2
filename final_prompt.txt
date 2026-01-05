@@ -82,3 +82,78 @@ The UI should feel **intentional, modern, and production-quality**, not just res
 ---
 
 ### 4. Usability Enhancements (All Required)
+
+Implement all of the following:
+
+* Highlight matching keywords in task titles during search
+* Provide a clear empty-state view when no tasks match current filters, including a reset action
+* Make table rows clearly interactive through hover and cursor feedback
+* Visually mark recently updated tasks for a short duration without breaking sorting or filtering
+
+---
+
+### 5. Usage Guide Sidebar
+
+Add a **persistent usage guide sidebar** to the page.
+
+The sidebar must:
+
+* Be visible alongside the main content (not a modal)
+* Briefly explain how to:
+
+  * Search tasks
+  * Filter and sort results
+  * Navigate pagination
+  * Update task status inline
+* Use concise, instructional language
+* Be visually distinct but unobtrusive
+* Adapt reasonably on smaller screens (collapsible or stacked layout is acceptable)
+
+The usage guide must be part of the UI itself, not only documented in README.
+
+---
+
+## Constraints
+
+* Do not remove or break existing functionality
+* Do not rewrite the application using a framework
+* No backend or external services
+* All state remains client-side
+* Incremental improvement only; avoid unnecessary abstraction
+
+---
+
+## Deliverables
+
+You must submit:
+
+* Updated HTML, CSS, and JavaScript source code
+* Clearly improved UI styling
+* A **README.md** describing:
+
+  * How to run the demo
+  * Key UI and interaction improvements
+  * How inline status updates work
+  * Design decisions, including the usage guide sidebar
+
+---
+
+## Evaluation Criteria
+
+### Pass
+
+* Baseline behavior remains intact
+* UI is clearly more polished, modern, and usable
+* Feedback and state changes are clear and consistent
+* Usage guide sidebar is accurate and helpful
+* Code changes are readable and incremental
+* README allows full reproduction
+
+### Fail
+
+* Baseline functionality is broken
+* UI improvements are superficial
+* State handling is confusing or fragile
+* Usage guide is missing or misleading
+* Code is unnecessarily rewritten
+* README is incomplete
