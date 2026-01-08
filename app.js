@@ -1,4 +1,4 @@
-// Baseline demo: all operations are local (no loading / error UI, no inline updates)
+// Baseline demo: improved UI with loading/error handling, inline updates, and usage guide
 
 function pad(n, len) {
   const s = String(n);
@@ -32,9 +32,15 @@ function seededTasks() {
   return tasks;
 }
 
-// "Mock API" (delay only)
+// "Mock API" (delay and simulated failure support)
 async function listTasks() {
-  await new Promise((r) => setTimeout(r, 80));
+  await new Promise((r) => setTimeout(r, 450));
+  const simulate = document.getElementById("simulateFail") && document.getElementById("simulateFail").checked;
+  if (simulate) {
+    // Reset the checkbox so errors are explicit per-request
+    document.getElementById("simulateFail").checked = false;
+    throw new Error("Simulated load failure");
+  }
   return seededTasks();
 }
 
@@ -46,7 +52,9 @@ const state = {
   sortKey: null,
   sortDir: null, // "asc" | "desc" | null
   page: 1,
-  pageSize: 10
+  pageSize: 10,
+  loading: false,
+  error: null
 };
 
 // Elements
@@ -63,6 +71,35 @@ const elPageInfo = document.getElementById("pageInfo");
 const elBackdrop = document.getElementById("backdrop");
 const elClose = document.getElementById("close");
 const elModalBody = document.getElementById("modalBody");
+const elEmpty = document.getElementById("empty");
+const elEmptyReset = document.getElementById("emptyReset");
+const elActiveFilters = document.getElementById("activeFilters");
+const elLoadError = document.getElementById("loadError");
+
+// Helpers
+function highlightMatch(text, q) {
+  if (!q) return escapeHtml(text);
+  const esc = q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const re = new RegExp(esc, "ig");
+  return escapeHtml(text).replace(re, (m) => `<span class="hl">${m}</span>`);
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>]/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+}
+
+function advanceStatus(s) {
+  if (s === "TODO") return "IN_PROGRESS";
+  if (s === "IN_PROGRESS") return "DONE";
+  return null;
+}
+
+async function simulateUpdate(task, nextStatus) {
+  // Simulated network: 85% success
+  await new Promise((r) => setTimeout(r, 700));
+  if (Math.random() < 0.85) return { ok: true };
+  else return { ok: false, error: "Network error" };
+}
 
 // Derived
 function applyQueryFilterSort() {
@@ -79,6 +116,11 @@ function applyQueryFilterSort() {
     out.sort((a, b) => {
       const va = String(a[k]);
       const vb = String(b[k]);
+      // For dates, compare timestamps
+      if (k === "createdAt") {
+        const cmp = new Date(va) - new Date(vb);
+        return dir === "asc" ? cmp : -cmp;
+      }
       const cmp = va.localeCompare(vb);
       return dir === "asc" ? cmp : -cmp;
     });
@@ -100,21 +142,70 @@ function render() {
   elSummary.textContent = `${total} items`;
   elPageInfo.textContent = `Page ${state.page} / ${pageCount}`;
 
-  elPrev.disabled = state.page <= 1;
-  elNext.disabled = state.page >= pageCount;
+  elPrev.disabled = state.page <= 1 || state.loading;
+  elNext.disabled = state.page >= pageCount || state.loading;
 
+  // active filters summary
+  const parts = [];
+  if (state.q) parts.push(`Search: "${state.q}"`);
+  if (state.status !== "ALL") parts.push(`Status: ${state.status}`);
+  if (state.sortKey && state.sortDir) parts.push(`Sort: ${state.sortKey} ${state.sortDir}`);
+  elActiveFilters.textContent = parts.join(" • ");
+
+  // top-level error
+  if (state.error) {
+    elLoadError.style.display = "block";
+    elLoadError.textContent = state.error + " ";
+  } else {
+    elLoadError.style.display = "none";
+  }
+
+  // Loading skeleton
+  if (state.loading) {
+    elTbody.innerHTML = Array.from({ length: Math.min(7, state.pageSize) })
+      .map(() => `
+        <tr class="skeleton-row"><td colspan="5">&nbsp;</td></tr>
+      `)
+      .join("");
+    elEmpty.style.display = "none";
+    return;
+  }
+
+  // Empty state
+  if (total === 0) {
+    elTbody.innerHTML = "";
+    elEmpty.style.display = "block";
+    return;
+  } else {
+    elEmpty.style.display = "none";
+  }
+
+  // Render rows
   elTbody.innerHTML = pageItems
-    .map(
-      (t) => `
-      <tr data-id="${t.id}">
-        <td>${t.id}</td>
-        <td>${t.title}</td>
-        <td>${t.assignee}</td>
-        <td>${t.status}</td>
-        <td>${formatDate(t.createdAt)}</td>
-      </tr>
-    `
-    )
+    .map((t) => {
+      const q = state.q.trim();
+      const titleHtml = highlightMatch(t.title, q);
+      const isUpdating = !!t.updating;
+      const next = advanceStatus(t.status);
+      const statusClass = t.status === "TODO" ? "status-todo" : t.status === "IN_PROGRESS" ? "status-inprogress" : "status-done";
+      const recent = t.recent ? "recent-updated" : "";
+
+      return `
+        <tr class="${recent}" data-id="${t.id}" data-updating="${isUpdating}">
+          <td>${t.id}</td>
+          <td>${titleHtml}</td>
+          <td>${t.assignee}</td>
+          <td>
+            <div style="display:flex;gap:8px;align-items:center">
+              <button class="status-btn ${statusClass}" ${isUpdating ? 'disabled' : ''} data-action="noop">${t.status}</button>
+              ${next ? `<button class="status-btn" data-action="advance" data-id="${t.id}" ${isUpdating ? 'disabled' : ''}>Advance →</button>` : ''}
+            </div>
+            ${t.updateError ? `<div class="muted-xs" style="color:var(--danger);margin-top:6px">${escapeHtml(t.updateError)}</div>` : ''}
+          </td>
+          <td class="muted-xs">${formatDate(t.createdAt)}</td>
+        </tr>
+      `;
+    })
     .join("");
 }
 
@@ -153,13 +244,19 @@ elReset.addEventListener("click", () => {
   state.sortDir = null;
   state.page = 1;
   state.pageSize = 10;
+  state.error = null;
 
   elQ.value = "";
   elStatus.value = "ALL";
   elPageSize.value = "10";
 
+  // clear per-task transient state
+  state.all.forEach((t) => { delete t.updateError; delete t.recent; delete t.updating; });
+
   render();
 });
+
+document.getElementById("emptyReset").addEventListener("click", () => elReset.click());
 
 elPageSize.addEventListener("change", (e) => {
   state.pageSize = Number(e.target.value);
@@ -177,10 +274,42 @@ elNext.addEventListener("click", () => {
   render();
 });
 
-// Click row -> modal
-elTbody.addEventListener("click", (e) => {
+// Clicks inside tbody: advance button or row open
+elTbody.addEventListener("click", async (e) => {
+  const adv = e.target.closest("button[data-action=advance]");
+  if (adv) {
+    const id = adv.getAttribute("data-id");
+    const task = state.all.find((x) => x.id === id);
+    if (!task || task.updating) return;
+
+    const next = advanceStatus(task.status);
+    if (!next) return;
+
+    // start updating
+    task.updating = true;
+    delete task.updateError;
+    render();
+
+    const res = await simulateUpdate(task, next);
+    task.updating = false;
+
+    if (res.ok) {
+      task.status = next;
+      task.recent = true;
+      setTimeout(() => { task.recent = false; render(); }, 1700);
+    } else {
+      task.updateError = res.error || "Update failed";
+    }
+
+    render();
+    return;
+  }
+
   const tr = e.target.closest("tr");
   if (!tr) return;
+  // if click was on a button, don't open modal
+  if (e.target.closest("button")) return;
+
   const id = tr.getAttribute("data-id");
   const task = state.all.find((x) => x.id === id);
   if (task) openModal(task);
@@ -192,6 +321,16 @@ elBackdrop.addEventListener("click", (e) => {
 });
 
 // Sort by header
+function updateSortIndicators() {
+  document.querySelectorAll("th[data-key]").forEach((th) => {
+    const key = th.getAttribute("data-key");
+    const span = th.querySelector('.sort');
+    if (state.sortKey === key && state.sortDir) {
+      span.textContent = state.sortDir === 'asc' ? '▲' : '▼';
+    } else span.textContent = '';
+  });
+}
+
 document.querySelectorAll("th[data-key]").forEach((th) => {
   th.addEventListener("click", () => {
     const key = th.getAttribute("data-key");
@@ -210,12 +349,29 @@ document.querySelectorAll("th[data-key]").forEach((th) => {
     }
 
     state.page = 1;
+    updateSortIndicators();
     render();
   });
 });
 
 // Init
-(async function init() {
-  state.all = await listTasks();
+async function loadData() {
+  state.loading = true;
+  state.error = null;
   render();
-})();
+
+  try {
+    const tasks = await listTasks();
+    // attach transient fields
+    state.all = tasks.map((t) => ({ ...t }));
+  } catch (err) {
+    state.error = err && err.message ? err.message : String(err);
+  } finally {
+    state.loading = false;
+    updateSortIndicators();
+    render();
+  }
+}
+
+loadData();
+
