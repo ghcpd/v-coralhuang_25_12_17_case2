@@ -3,101 +3,615 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Task Dashboard - Baseline Demo</title>
+    <title>Task Management Dashboard</title>
     <style>
-      body { font-family: Arial, Helvetica, sans-serif; margin: 0; background: #f6f7f9; }
-      header { background: #1f2937; color: #fff; padding: 12px 16px; }
-      .container { padding: 16px; max-width: 1100px; margin: 0 auto; }
-      .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px; }
-      .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
-      input, select, button {
-        height: 34px; border: 1px solid #d1d5db; border-radius: 6px; padding: 0 10px;
-        background: #fff; font-size: 14px;
+      :root {
+        --primary-color: #2563eb;
+        --primary-hover: #1d4ed8;
+        --secondary-color: #64748b;
+        --accent-color: #10b981;
+        --error-color: #ef4444;
+        --warning-color: #f59e0b;
+        --background-color: #f8fafc;
+        --card-background: #ffffff;
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --border-color: #e2e8f0;
+        --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
       }
-      button { cursor: pointer; }
-      button:active { transform: translateY(1px); }
-      table { width: 100%; border-collapse: collapse; margin-top: 12px; }
-      th, td { padding: 10px 8px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 14px; }
-      th { user-select: none; cursor: pointer; background: #fafafa; }
-      tr:hover { background: #f9fafb; }
-      .muted { color: #6b7280; font-size: 12px; }
-      .pager { display: flex; gap: 8px; align-items: center; justify-content: flex-end; margin-top: 10px; }
-      .pager button { height: 30px; }
-      .pill { padding: 2px 8px; border-radius: 999px; border: 1px solid #e5e7eb; font-size: 12px; background: #fff; }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        margin: 0;
+        background: var(--background-color);
+        color: var(--text-primary);
+        line-height: 1.5;
+      }
+
+      .app {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        width: 280px;
+        background: var(--card-background);
+        border-right: 1px solid var(--border-color);
+        padding: 24px;
+        overflow-y: auto;
+      }
+
+      .sidebar h2 {
+        margin: 0 0 16px 0;
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .sidebar-section {
+        margin-bottom: 24px;
+      }
+
+      .sidebar-section h3 {
+        margin: 0 0 8px 0;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--primary-color);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .sidebar-section p {
+        margin: 0 0 8px 0;
+        font-size: 14px;
+        color: var(--text-secondary);
+      }
+
+      .main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      header {
+        background: var(--primary-color);
+        color: white;
+        padding: 16px 24px;
+        box-shadow: var(--shadow);
+      }
+
+      .header-content {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .header-title {
+        font-size: 24px;
+        font-weight: 700;
+        margin: 0 0 4px 0;
+      }
+
+      .header-subtitle {
+        font-size: 14px;
+        opacity: 0.9;
+        margin: 0;
+      }
+
+      .container {
+        flex: 1;
+        padding: 24px;
+        max-width: 1200px;
+        margin: 0 auto;
+        width: 100%;
+      }
+
+      .card {
+        background: var(--card-background);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: var(--shadow);
+        margin-bottom: 24px;
+      }
+
+      .controls {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-bottom: 24px;
+      }
+
+      .search-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex: 1;
+        min-width: 300px;
+      }
+
+      .search-input {
+        flex: 1;
+        height: 40px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 0 12px;
+        font-size: 14px;
+        background: var(--card-background);
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+
+      .search-input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+      }
+
+      .filter-select {
+        height: 40px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 0 12px;
+        font-size: 14px;
+        background: var(--card-background);
+        min-width: 140px;
+      }
+
+      .btn {
+        height: 40px;
+        border: none;
+        border-radius: 8px;
+        padding: 0 16px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .btn-primary {
+        background: var(--primary-color);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: var(--primary-hover);
+      }
+
+      .btn-secondary {
+        background: var(--card-background);
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+      }
+
+      .btn-secondary:hover {
+        background: var(--background-color);
+      }
+
+      .status-indicator {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .status-todo {
+        background: #fef3c7;
+        color: #92400e;
+      }
+
+      .status-in-progress {
+        background: #dbeafe;
+        color: #1e40af;
+      }
+
+      .status-done {
+        background: #d1fae5;
+        color: #065f46;
+      }
+
+      .summary {
+        background: var(--background-color);
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 14px;
+        color: var(--text-secondary);
+      }
+
+      .loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 48px;
+        color: var(--text-secondary);
+      }
+
+      .spinner {
+        width: 20px;
+        height: 20px;
+        border: 2px solid var(--border-color);
+        border-top: 2px solid var(--primary-color);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-right: 12px;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      .error {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        color: var(--error-color);
+        padding: 16px;
+        border-radius: 8px;
+        margin-bottom: 24px;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 64px 24px;
+        color: var(--text-secondary);
+      }
+
+      .empty-state h3 {
+        margin: 0 0 8px 0;
+        color: var(--text-primary);
+      }
+
+      .empty-state p {
+        margin: 0 0 24px 0;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 24px;
+        font-size: 14px;
+      }
+
+      th {
+        background: var(--background-color);
+        padding: 16px 12px;
+        text-align: left;
+        font-weight: 600;
+        color: var(--text-primary);
+        border-bottom: 2px solid var(--border-color);
+        user-select: none;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        position: relative;
+      }
+
+      th:hover {
+        background: #f1f5f9;
+      }
+
+      th.sort-asc::after {
+        content: '↑';
+        position: absolute;
+        right: 8px;
+        color: var(--primary-color);
+      }
+
+      th.sort-desc::after {
+        content: '↓';
+        position: absolute;
+        right: 8px;
+        color: var(--primary-color);
+      }
+
+      td {
+        padding: 16px 12px;
+        border-bottom: 1px solid var(--border-color);
+        vertical-align: top;
+      }
+
+      tr {
+        transition: background-color 0.2s;
+      }
+
+      tr:hover {
+        background: #f8fafc;
+        cursor: pointer;
+      }
+
+      tr.updated {
+        background: #ecfdf5;
+        animation: highlight 2s ease-out;
+      }
+
+      @keyframes highlight {
+        0% { background: #ecfdf5; }
+        100% { background: transparent; }
+      }
+
+      .status-cell {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .status-select {
+        height: 32px;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        padding: 0 8px;
+        font-size: 12px;
+        background: var(--card-background);
+        cursor: pointer;
+      }
+
+      .status-select:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .updating {
+        position: relative;
+      }
+
+      .updating::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .updating .spinner {
+        width: 16px;
+        height: 16px;
+        border-width: 2px;
+        margin: 0;
+      }
+
+      .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 24px;
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+
+      .page-controls {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .page-size-select {
+        height: 36px;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        padding: 0 8px;
+        font-size: 14px;
+      }
+
+      .page-info {
+        color: var(--text-secondary);
+        font-size: 14px;
+      }
 
       /* Modal */
-      .backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.35); display: none; align-items: center; justify-content: center; padding: 16px; }
-      .modal { width: 520px; max-width: 100%; background: #fff; border-radius: 10px; border: 1px solid #e5e7eb; }
-      .modal-hd { padding: 12px 14px; border-bottom: 1px solid #e5e7eb; display:flex; justify-content: space-between; align-items:center; }
-      .modal-bd { padding: 14px; }
-      .kv { display: grid; grid-template-columns: 120px 1fr; gap: 8px; margin-bottom: 10px; }
-      .k { color:#374151; font-weight: 600; }
-      .v { color:#111827; }
-      .xbtn { border: none; background: transparent; font-size: 18px; cursor: pointer; padding: 4px 8px; }
+      .backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        z-index: 1000;
+      }
+
+      .modal {
+        width: 520px;
+        max-width: 100%;
+        background: var(--card-background);
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow-lg);
+        max-height: 80vh;
+        overflow-y: auto;
+      }
+
+      .modal-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .modal-title {
+        font-weight: 600;
+        font-size: 18px;
+        margin: 0;
+      }
+
+      .modal-close {
+        border: none;
+        background: transparent;
+        font-size: 24px;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 4px;
+        color: var(--text-secondary);
+        transition: color 0.2s;
+      }
+
+      .modal-close:hover {
+        color: var(--text-primary);
+      }
+
+      .modal-body {
+        padding: 24px;
+      }
+
+      .task-detail {
+        display: grid;
+        grid-template-columns: 120px 1fr;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .task-detail-label {
+        color: var(--text-secondary);
+        font-weight: 500;
+      }
+
+      .task-detail-value {
+        color: var(--text-primary);
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .app {
+          flex-direction: column;
+        }
+
+        .sidebar {
+          width: 100%;
+          border-right: none;
+          border-bottom: 1px solid var(--border-color);
+          padding: 16px;
+        }
+
+        .controls {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .search-group {
+          min-width: auto;
+        }
+
+        .pagination {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .table-wrapper {
+          overflow-x: auto;
+        }
+
+        table {
+          min-width: 600px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .container {
+          padding: 16px;
+        }
+
+        .card {
+          padding: 16px;
+        }
+
+        .sidebar {
+          padding: 16px;
+        }
+      }
     </style>
   </head>
   <body>
-    <header>
-      <div style="max-width:1100px;margin:0 auto;">
-        <div style="font-size:16px;font-weight:700;">Task Dashboard (Baseline Demo)</div>
-        <div class="muted" style="color:#d1d5db;">List + Search + Filter + Sort + Pagination + Read-only Details</div>
-      </div>
-    </header>
+    <div class="app">
+      <aside class="sidebar">
+        <h2>Usage Guide</h2>
 
-    <div class="container">
-      <div class="card">
-        <div class="row">
-          <input id="q" placeholder="Search by title..." style="width:260px;" />
-
-          <select id="status" aria-label="Status filter">
-            <option value="ALL">All Status</option>
-            <option value="TODO">TODO</option>
-            <option value="IN_PROGRESS">IN_PROGRESS</option>
-            <option value="DONE">DONE</option>
-          </select>
-
-          <button id="reset" type="button">Reset</button>
-
-          <span class="pill" id="summary">0 items</span>
-          <span class="muted">Click headers to sort. Click a row to view details.</span>
+        <div class="sidebar-section">
+          <h3>Search Tasks</h3>
+          <p>Use the search box to find tasks by title. Matching text will be highlighted in the results.</p>
         </div>
 
-        <table aria-label="Task table">
-          <thead>
-            <tr>
-              <th data-key="id">Task ID</th>
-              <th data-key="title">Title</th>
-              <th data-key="assignee">Assignee</th>
-              <th data-key="status">Status</th>
-              <th data-key="createdAt">Created At</th>
-            </tr>
-          </thead>
-          <tbody id="tbody"></tbody>
-        </table>
-
-        <div class="pager">
-          <span class="muted">Page size</span>
-          <select id="pageSize" aria-label="Page size">
-            <option value="5">5</option>
-            <option value="10" selected>10</option>
-            <option value="20">20</option>
-          </select>
-
-          <button id="prev" type="button">Prev</button>
-          <span id="pageInfo" class="muted"></span>
-          <button id="next" type="button">Next</button>
+        <div class="sidebar-section">
+          <h3>Filter & Sort</h3>
+          <p>Filter tasks by status using the dropdown. Click column headers to sort by that field.</p>
         </div>
-      </div>
+
+        <div class="sidebar-section">
+          <h3>Update Status</h3>
+          <p>Click the status dropdown in any row to update task status. Status must progress: TODO → IN_PROGRESS → DONE.</p>
+        </div>
+
+        <div class="sidebar-section">
+          <h3>Navigate Pages</h3>
+          <p>Use the pagination controls at the bottom to browse through tasks. Adjust page size as needed.</p>
+        </div>
+
+        <div class="sidebar-section">
+          <h3>View Details</h3>
+          <p>Click any row to view full task details in a modal dialog.</p>
+        </div>
+
+        <div class="sidebar-section">
+          <h3>Reset View</h3>
+          <p>Use the Reset button to clear all filters, sorting, and return to the first page.</p>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header>
+          <div class="header-content">
+            <h1 class="header-title">Task Management Dashboard</h1>
+            <p class="header-subtitle">Manage and track your team's tasks efficiently</p>
+          </div>
+        </header>
+
+        <div class="container">
+          <div class="card">
+            <div class="controls">
+              <div class="search-group">
+                <input id="q" type="text" class="search-input" placeholder="Search tasks by title..." />
+              </div>
+
+              <select id="status" class="filter-select" aria-label="Filter by status">
+                <option value="ALL">All Status</option>
+                <option value="TODO">TODO</option>
+                <option value="IN_PROGRESS">IN_PROGRESS</option>
+                <option value="DONE">DONE</option>
+              </select>
+
+              <button id="reset" type="button" class="btn btn-secondary">Reset All</button>
+
+              <span class="summary" id="summary">Loading...</span>
+            </div>
+
+            <div id="content">
+              <!-- Loading, error, or table will be inserted here -->
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
 
     <!-- Modal -->
     <div class="backdrop" id="backdrop">
-      <div class="modal" role="dialog" aria-modal="true" aria-label="Task details dialog">
-        <div class="modal-hd">
-          <div style="font-weight:700;">Task Details</div>
-          <button class="xbtn" id="close" aria-label="Close dialog" type="button">×</button>
+      <div class="modal" role="dialog" aria-modal="true" aria-label="Task details">
+        <div class="modal-header">
+          <h2 class="modal-title">Task Details</h2>
+          <button class="modal-close" id="close" aria-label="Close dialog" type="button">&times;</button>
         </div>
-        <div class="modal-bd" id="modalBody"></div>
+        <div class="modal-body" id="modalBody"></div>
       </div>
     </div>
 

@@ -1,0 +1,249 @@
+User: You are a **frontend software engineer** working on an existing internal product.
+
+You are given a **working baseline web UI demo** for a **Task Management Dashboard**.
+The baseline source code has already been provided to you.
+
+The application is implemented using **plain HTML, CSS, and vanilla JavaScript**
+(no framework, no build tools, no external UI libraries).
+
+The baseline application **runs correctly** and must **not be rewritten from scratch**.
+
+---
+
+## Baseline Functionality
+
+The baseline application already supports a basic task dashboard, including:
+
+* A task table with search, filter, sorting, and pagination
+* Read-only task detail view
+* Local mock data
+* Minimal styling and no advanced UI feedback
+
+The baseline is intentionally simple and functional.
+
+---
+
+## Your Task
+
+Improve and polish the existing UI by adding **visual quality, clearer feedback, richer interactions, and in-context guidance**, while keeping all baseline behavior intact.
+
+This task focuses on **real-world frontend craftsmanship**, not just feature completeness.
+
+---
+
+## Required Improvements
+
+### 1. UI Visual Quality & Frontend Polish (Mandatory)
+
+You must significantly improve the overall look and feel of the application.
+
+This includes, but is not limited to:
+
+* A clear and structured layout (header, controls, content area, sidebar)
+* Improved spacing, typography, and alignment
+* A consistent and intentional color system
+* Clear visual hierarchy between primary and secondary elements
+* Polished table presentation with hover states and readable density
+* Subtle animations or transitions where appropriate
+* Reasonable responsiveness on smaller screens
+
+The UI should feel **intentional, modern, and production-quality**, not just restyled.
+
+---
+
+### 2. Loading, Error, and State Feedback
+
+* Display a loading indicator while tasks are being fetched
+* Handle simulated loading failures with clear error messages
+* Avoid layout jumps during loading or error states
+* Clearly indicate active search, filters, and sorting
+* Provide a single action to reset all view state (filters, sorting, pagination)
+
+---
+
+### 3. Inline Task Status Updates
+
+* Allow task status updates directly within the table
+* Enforce the transition order: `TODO → IN_PROGRESS → DONE`
+* While updating:
+
+  * Show row-level loading
+  * Prevent duplicate actions
+* On success:
+
+  * Update the UI immediately
+  * Briefly highlight the updated task
+* On failure:
+
+  * Show an inline error and revert state
+
+(Mock update logic is acceptable; no backend required.)
+
+---
+
+### 4. Usability Enhancements (All Required)
+
+Implement all of the following:
+
+* Highlight matching keywords in task titles during search
+* Provide a clear empty-state view when no tasks match current filters, including a reset action
+* Make table rows clearly interactive through hover and cursor feedback
+* Visually mark recently updated tasks for a short duration without breaking sorting or filtering
+
+---
+
+### 5. Usage Guide Sidebar
+
+Add a **persistent usage guide sidebar** to the page.
+
+The sidebar must:
+
+* Be visible alongside the main content (not a modal)
+* Briefly explain how to:
+
+  * Search tasks
+  * Filter and sort results
+  * Navigate pagination
+  * Update task status inline
+* Use concise, instructional language
+* Be visually distinct but unobtrusive
+* Adapt reasonably on smaller screens (collapsible or stacked layout is acceptable)
+
+The usage guide must be part of the UI itself, not only documented in README.
+
+---
+
+## Constraints
+
+* Do not remove or break existing functionality
+* Do not rewrite the application using a framework
+* No backend or external services
+* All state remains client-side
+* Incremental improvement only; avoid unnecessary abstraction
+
+---
+
+## Deliverables
+
+You must submit:
+
+* Updated HTML, CSS, and JavaScript source code
+* Clearly improved UI styling
+* A **README.md** describing:
+
+  * How to run the demo
+  * Key UI and interaction improvements
+  * How inline status updates work
+  * Design decisions, including the usage guide sidebar
+
+---
+
+## Evaluation Criteria
+
+### Pass
+
+* Baseline behavior remains intact
+* UI is clearly more polished, modern, and usable
+* Feedback and state changes are clear and consistent
+* Usage guide sidebar is accurate and helpful
+* Code changes are readable and incremental
+* README allows full reproduction
+
+### Fail
+
+* Baseline functionality is broken
+* UI improvements are superficial
+* State handling is confusing or fragile
+* Usage guide is missing or misleading
+* Code is unnecessarily rewritten
+* README is incomplete
+
+
+GitHub Copilot: Optimizing tool selection...
+
+Read [](file:///c%3A/Bug_Bash/25_12_17/v-coralhuang_25_12_17_case2/index.html#1-1), lines 1 to 100
+
+Read [](file:///c%3A/Bug_Bash/25_12_17/v-coralhuang_25_12_17_case2/index.html#101-101), lines 101 to 107
+
+Read [](file:///c%3A/Bug_Bash/25_12_17/v-coralhuang_25_12_17_case2/app.js#1-1), lines 1 to 100
+
+Read [](file:///c%3A/Bug_Bash/25_12_17/v-coralhuang_25_12_17_case2/app.js#101-101), lines 101 to 222
+
+Using "Replace String in File"
+
+
+```
+
+```
+
+
+Using "Replace String in File"
+
+
+```
+
+```
+
+
+Created [](file:///c%3A/Bug_Bash/25_12_17/v-coralhuang_25_12_17_case2/README.md)
+
+Ran terminal command: python -m http.server 8000
+
+Ran terminal command: node -c app.js
+
+Ran terminal command: node -c "c:\Bug_Bash\25_12_17\v-coralhuang_25_12_17_case2\app.js"
+
+Read [](file:///c%3A/Bug_Bash/25_12_17/v-coralhuang_25_12_17_case2/index.html#1-1), lines 1 to 50
+
+Read [](file:///c%3A/Bug_Bash/25_12_17/v-coralhuang_25_12_17_case2/app.js#1-1), lines 1 to 50
+
+## Summary
+
+I have successfully enhanced the baseline Task Management Dashboard with all required improvements while maintaining backward compatibility. Here's what was implemented:
+
+### ✅ **UI Visual Quality & Frontend Polish**
+- **Modern Layout**: Structured design with header, persistent sidebar, and main content area
+- **Professional Styling**: CSS variables for consistent colors, improved typography (Inter font), proper spacing and alignment
+- **Visual Hierarchy**: Clear distinction between primary/secondary elements with appropriate shadows and borders
+- **Responsive Design**: Mobile-optimized layout that stacks sidebar below content on smaller screens
+- **Subtle Animations**: Loading spinners, hover transitions, and highlight animations
+
+### ✅ **Loading, Error, and State Feedback**
+- **Loading States**: Spinner and loading messages during task fetching (800ms delay)
+- **Error Handling**: Clear error messages with retry functionality (10% simulated failure rate)
+- **State Indicators**: Active search/filter/sort states clearly communicated
+- **Reset Functionality**: Single "Reset All" button clears all filters, sorting, and pagination
+
+### ✅ **Inline Task Status Updates**
+- **Interactive Dropdowns**: Status selects directly in table rows
+- **Workflow Enforcement**: Strict progression: TODO → IN_PROGRESS → DONE
+- **Update Feedback**: Row-level loading spinners, prevents duplicate actions
+- **Success Handling**: Immediate UI updates with 2-second green highlight
+- **Error Recovery**: Failed updates show alerts and revert status (15% failure rate)
+
+### ✅ **Usability Enhancements**
+- **Search Highlighting**: Matching keywords in task titles highlighted with `<mark>` tags
+- **Empty States**: Helpful messages when no tasks match filters, with reset action
+- **Interactive Rows**: Clear hover feedback and pointer cursors
+- **Recently Updated**: Tasks visually marked for 2 seconds after successful updates
+
+### ✅ **Usage Guide Sidebar**
+- **Persistent Guide**: Always visible sidebar with concise instructions
+- **Complete Coverage**: Explains search, filtering, sorting, status updates, pagination, and details view
+- **Responsive**: Stacks below main content on mobile devices
+- **Unobtrusive**: Subtle styling that doesn't interfere with main content
+
+### ✅ **Deliverables**
+- **Updated Source Code**: Enhanced index.html and app.js with all new features
+- **Comprehensive README**: Detailed documentation covering setup, improvements, and design decisions
+
+### **Technical Highlights**
+- **Vanilla Implementation**: No frameworks, build tools, or external libraries
+- **Error Simulation**: Realistic network delays and failure rates for testing
+- **Performance**: Efficient rendering with minimal DOM manipulation
+- **Accessibility**: Proper ARIA labels, semantic HTML, and keyboard navigation
+- **Browser Compatibility**: Modern ES6+ features with graceful fallbacks
+
+The application now provides a production-quality user experience while maintaining all baseline functionality. You can run it by opening index.html in any modern browser or serving it with a local HTTP server.
+
+Made changes.
